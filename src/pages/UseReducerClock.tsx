@@ -1,8 +1,32 @@
-export default function CopyMe() {
+import { useReducer } from "react";
+import type { SetTodayAction } from "../store/actions";
+import type { AppState } from "../store";
+import {Div, Title, Subtitle} from '../components'
+import { useInterval } from "../hooks";
+
+export default function useReducerClock() {
+  const [{today}, dispatch] = useReducer(
+    (state: AppState, action: SetTodayAction) => {
+      switch (action.type) {
+        case 'setToday':
+          return {...state, today: new Date()}
+      }
+      return state
+    },
+    {
+      today: new Date()
+    }
+  )
+
+  useInterval(() => {
+    dispatch({type: 'setToday', today: new Date()})
+  })
+
   return (
-    <section className="mt-4">
-      <h2 className="font-bold text-5xl text-center">CopyMe</h2>
-      <div className="mt-4"></div>
-    </section>
+    <Div className="flex flex-col items-center justify-center mt-16">
+      <Title className="text-5xl">ReduxClock</Title>
+      <Title className="mt-4 text-3xl">{today.toLocaleTimeString()}</Title>
+      <Subtitle className="mt-4 text-3xl">{today.toLocaleDateString()}</Subtitle>
+    </Div>
   )
 }

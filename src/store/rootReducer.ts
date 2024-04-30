@@ -1,10 +1,14 @@
-import type {Action} from 'redux'
+import type {Actions} from './actions'
 import type {AppState} from './AppState'
 
 const initialAppState = {
   today: new Date()
 }
-export const rootReducer = (prevState: AppState = initialAppState, action: Action) => {
-  const newState = {...prevState} // 깊은 복사 필요
-  return newState
+export const rootReducer = (state: AppState = initialAppState, action: Actions) => {
+  switch (action.type) {
+    case 'setToday': {
+      return {...state, today:action.today}
+    }
+  }
+  return state
 }
